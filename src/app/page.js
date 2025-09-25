@@ -1,9 +1,11 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import Hero from "./Hero.js";
+
+export default function About() {
   return (
-    <div>
-      this is my first setup 
-    </div>
+    <main>
+      <Hero />
+    </main>
   );
 }
