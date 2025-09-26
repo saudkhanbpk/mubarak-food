@@ -5,7 +5,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 
 const Footer = () => {
   return (
-    <div className="bg-white">
+    <div className="">
     <footer
       className="
         bg-pink-100 

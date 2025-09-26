@@ -11,9 +11,6 @@ import Footer from "@/components/Footer";
 export default function About() {
   return (
     <>
-    <div>
-      <Navbar />
-    </div>
     <main>
       <Hero />
       <ProductShowcase />
@@ -21,8 +18,5 @@ export default function About() {
       <SaltFeaturesSection />
       <Message />
     </main>
-    <footer>
-      <Footer />
-    </footer>
   </>);
 }

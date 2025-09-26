@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 
 export default function ProductShowcase() {
   const products = [
-    { title: "Chilli Powder", img: "/pink2.png", btn: "Order Now" },
-    { title: "Edible Pink Salt", img: "/pink3.png", btn: "Order Now" },
-    { title: "Pink Salt Lamp", img: "/pink1.png", btn: "Order Now" },
+    { title: "Chilli Powder", img: "/pink2.png", btn: "See All" },
+    { title: "Edible Pink Salt", img: "/pink3.png", btn: "See All" },
+    { title: "Pink Salt Lamp", img: "/pink1.png", btn: "See All" },
   ];
 
   return (
@@ -78,7 +78,7 @@ export default function ProductShowcase() {
 
             {/* Button - Responsive sizing */}
             <Link
-              href="/order"
+              href="/products"
               className="relative bg-gradient-to-r from-orange-400 to-red-400 text-white px-4 py-2 sm:px-5 sm:py-2 md:px-6 md:py-3 lg:px-5 lg:py-2 xl:px-6 xl:py-3 rounded-full text-sm sm:text-base md:text-lg lg:text-base xl:text-lg flex items-center gap-2 hover:opacity-90 transition-opacity duration-300 font-medium"
             >
               {product.btn}
@@ -88,16 +88,6 @@ export default function ProductShowcase() {
         ))}
       </div>
 
-     {/* View All Products Button */}
-<div className="text-center mt-12 sm:mt-16 md:mt-20 lg:mt-24 relative z-10">
-  <Link
-    href="/products"
-    className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 rounded-full text-base sm:text-lg md:text-xl font-bold hover:scale-105 hover:shadow-xl transition-all duration-300 transform"
-  >
-    View All Products
-    <span className="text-lg sm:text-xl">→</span>
-  </Link>
-</div>
 
     </section>
   );
