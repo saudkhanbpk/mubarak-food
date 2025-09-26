@@ -13,7 +13,7 @@ export default function Navbar() {
                     <div className="flex-shrink-0">
                         <a href="/" className="flex items-center space-x-2">
                             {/* Replace with your logo image */}
-                            <img src="/mubareklogo.png" alt="Mobarark Foods" className="h-18 w-auto" />
+                            <img src="/mubareklogo.png" alt="Mobarark Foods" className="h-16 w-auto" />
                             {/* <span className="font-bold text-lg">Mobarark Foods</span> */}
                         </a>
                     </div>
