@@ -3,6 +3,8 @@ import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import ProductShowcase from "@/components/ProductShowcase";
+import FeatureCardsSection from "@/components/FeatureCardsSection"
+import SaltFeaturesSection from "@/components/SaltBenefitsSection";
 import Footer from "@/components/Footer";
 
 export default function About() {
@@ -14,6 +16,8 @@ export default function About() {
     <main>
       <Hero />
       <ProductShowcase />
+      <FeatureCardsSection />
+      <SaltFeaturesSection />
     </main>
     <footer>
       <Footer />
