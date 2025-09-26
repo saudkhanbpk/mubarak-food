@@ -58,7 +58,7 @@ const Message = () => {
     }, [testimonials.length]);
 
     return (
-        <div className="w-[90vw] mx-auto flex flex-col lg:flex-row mb-8">
+        <div className="w-[90vw] mx-auto flex flex-col lg:flex-row mb-8 mt-4 bg-white">
             {/* Left section with background image */}
             <div
                 className="

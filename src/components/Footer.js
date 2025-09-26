@@ -5,6 +5,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 
 const Footer = () => {
   return (
+    <div className="bg-white">
     <footer
       className="
         bg-pink-100 
@@ -34,18 +35,11 @@ const Footer = () => {
           </Link>
           <span className="hidden sm:inline text-gray-400">|</span>
           <Link href="/shop" className="hover:text-gray-900 transition-colors">
-            Shop
+            Products
           </Link>
           <span className="hidden sm:inline text-gray-400">|</span>
-          <Link href="/edible-salt" className="hover:text-gray-900 transition-colors">
-            Edible Salt
-          </Link>
           <span className="hidden sm:inline text-gray-400">|</span>
-          <Link href="/pink-salt-lamp" className="hover:text-gray-900 transition-colors">
-            Pink Salt Lamp
-          </Link>
-          <span className="hidden sm:inline text-gray-400">|</span>
-          <Link href="/contact" className="hover:text-gray-900 transition-colors">
+          <Link href="/contact-us" className="hover:text-gray-900 transition-colors">
             Contact
           </Link>
         </nav>
@@ -70,6 +64,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
+    </div>
   );
 };
 
