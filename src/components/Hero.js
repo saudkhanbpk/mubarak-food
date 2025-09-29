@@ -105,9 +105,9 @@ export default function Hero() {
       <motion.img
         src="mainn.png"
         alt="Himalayan Pink Salt Collection"
-        className="w-44 sm:w-64 md:w-80 lg:w-[450px] xl:w-[520px] mt-8 lg:mt-0 lg:ml-12 drop-shadow-2xl"
+        className="w-44 sm:w-64 md:w-80 lg:w-[450px] xl:w-[520px] mt-10 lg:mt-0 lg:ml-12 drop-shadow-2xl"
         initial={{ opacity: 0, scale: 0.85, y: 50 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
+        animate={{ opacity: 1, scale: 1, y: -35}}
         transition={{ duration: 0.6, ease: "easeOut" }}
       />
     </section>
