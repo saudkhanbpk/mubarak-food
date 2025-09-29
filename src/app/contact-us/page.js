@@ -4,7 +4,7 @@ import { Mail, Phone, MapPin } from 'lucide-react';
 
 export default function page() {
     return (
-        <section className="bg-white py-12 mb-8 mt-4">
+        <section className=" py-12 mb-8 mt-4">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">Contact Us</h2>
                 <p className="text-gray-600 mb-8">

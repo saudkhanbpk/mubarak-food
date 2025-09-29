@@ -26,7 +26,7 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center space-x-4 md:space-x-6 lg:space-x-8">
             {[
               { href: '/', label: 'Home' },
-              { href: '/Products', label: 'Products' },
+              { href: '/product', label: 'Products' },
               { href: '/contact-us', label: 'Contact' },
             ].map((item) => (
               <Link
@@ -40,7 +40,7 @@ export default function Navbar() {
 
             {/* Order Now Button */}
             <Link
-              href="/order"
+              href="/order-now"
               className="inline-flex items-center px-5 py-2 md:px-6 md:py-2.5 rounded-full bg-gradient-to-r from-orange-400 to-red-400 text-white font-semibold hover:from-orange-500 hover:to-red-500 transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm md:text-base"
             >
               Order now
@@ -65,7 +65,7 @@ export default function Navbar() {
             <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200 rounded-b-lg">
               {[
                 { href: '/', label: 'Home' },
-                { href: '/Products', label: 'Products' },
+                { href: '/product', label: 'Products' },
                 { href: '/contact-us', label: 'Contact' },
               ].map((item) => (
                 <Link
@@ -78,7 +78,7 @@ export default function Navbar() {
                 </Link>
               ))}
               <Link
-                href="/order"
+                href="/order-now"
                 className="block mx-3 mt-4 px-6 py-2.5 rounded-full bg-gradient-to-r from-orange-400 to-red-400 text-white font-semibold text-center text-sm sm:text-base"
                 onClick={() => setIsMenuOpen(false)}
               >
