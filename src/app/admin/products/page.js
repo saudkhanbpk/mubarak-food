@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({
     image: "",
     title: "",
@@ -15,7 +16,12 @@ export default function ProductsPage() {
   });
   const [editProduct, setEditProduct] = useState(null);
 
-  const categories = ["Chilli Powder", "Edible Pink Salt", "Pink Salt Lamp", "Other"];
+  // const categories = ["Chilli Powder", "Edible Pink Salt", "Pink Salt Lamp", "Other"];
+  useEffect(() => {
+    fetch("/api/category")
+      .then((res) => res.json())
+      .then((data) => setCategories(data.data|| []));
+  }, []);
 
   // Load products from localStorage once
   useEffect(() => {
@@ -157,9 +163,10 @@ export default function ProductsPage() {
             required
           >
             <option value="">Select Category</option>
-            {categories.map((c) => (
-              <option key={c} value={c}>
-                {c}
+            {Array.isArray(categories) &&
+            categories.map((c) => (
+              <option key={c._id} value={c.name}>
+                {c.name}
               </option>
             ))}
           </select>
@@ -245,9 +252,8 @@ export default function ProductsPage() {
               <td className="p-2">{p.category}</td>
               <td className="p-2">
                 <span
-                  className={`px-2 py-1 rounded text-white text-sm ${
-                    p.status === "available" ? "bg-green-500" : "bg-red-500"
-                  }`}
+                  className={`px-2 py-1 rounded text-white text-sm ${p.status === "available" ? "bg-green-500" : "bg-red-500"
+                    }`}
                 >
                   {p.status === "available" ? "Available" : "Out of Stock"}
                 </span>

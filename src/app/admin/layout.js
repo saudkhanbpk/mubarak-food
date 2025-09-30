@@ -39,7 +39,8 @@ export default function AdminLayout({ children }) {
           <a href="/admin/dashboard">Dashboard</a>
           <a href="/admin/orders">Orders</a>
           <a href="/admin/products">Products</a>
-          <a href="/admin/faqs">FAQs</a>
+          <a href="/admin/categroy">Add Categories</a>
+          <a href="/admin/contact">Contact</a>
           <button
             onClick={() => {
               localStorage.removeItem("adminToken");

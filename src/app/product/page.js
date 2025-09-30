@@ -46,9 +46,9 @@ const Page = () => {
         { id: 10, name: 'Spice Blends', image: '/cat10.jpg' },
     ];
 
-    const products = Array.from({ length: 122 }).map((_, i) => ({
+    const products = Array.from({ length: 12 }).map((_, i) => ({
         id: i + 1,
-        name: `Product ${i + 1}`,
+        name: `Product`,
         price: (Math.random() * 10).toFixed(2),
         image: '/cat1.jpg'
     }));
@@ -140,7 +140,7 @@ const Page = () => {
                             <h3 className="font-semibold text-sm sm:text-base truncate">
                                 {product.name}
                             </h3>
-                            <p className="text-green-600">€ {product.price}</p>
+                            <p className="text-green-600">Rs: {product.price}</p>
                             <button className="mt-2 bg-lime-400 text-black px-4 py-1 rounded hover:bg-lime-500">
                                 Add
                             </button>
