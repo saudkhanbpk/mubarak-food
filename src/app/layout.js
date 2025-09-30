@@ -1,33 +1,20 @@
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+"use client"; // ✅ Make this a client component
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata = {
-  title: "Mubarak Food",
-  description: "Mubarak Food",
-};
+import "./globals.css";
+import { usePathname } from "next/navigation";
 
 export default function RootLayout({ children }) {
+  const pathname = usePathname();
+  const isAdminRoute = pathname.includes("admin"); // check if 'admin' is in the URL
+
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased ` }
-         style={{ backgroundColor: 'white' }}
-      >
-        <Navbar />
-        {children}
-        <Footer />
+      <body>
+        {!isAdminRoute && <Navbar />}
+        <main>{children}</main>
+        {!isAdminRoute && <Footer />}
       </body>
     </html>
   );
