@@ -12,6 +12,9 @@ export default function ProductsPage() {
     quantity: 1,
     weight: "",
     category: "",
+    shippingFees: "",
+    otherCharges: "",
+    discount: "",
   });
   const [editProduct, setEditProduct] = useState(null);
 
@@ -27,14 +30,13 @@ export default function ProductsPage() {
 
   // Save products to localStorage whenever they change
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && products.length > 0) {
       localStorage.setItem("products", JSON.stringify(products));
     }
   }, [products]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-
     if (name === "image" && files && files[0]) {
       const reader = new FileReader();
       reader.onloadend = () => setForm((prev) => ({ ...prev, image: reader.result }));
@@ -54,6 +56,9 @@ export default function ProductsPage() {
       quantity: 1,
       weight: "",
       category: "",
+      shippingFees: "",
+      otherCharges: "",
+      discount: "",
     });
 
   const addOrUpdateProduct = (e) => {
@@ -109,11 +114,7 @@ export default function ProductsPage() {
             className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {form.image && (
-            <img
-              src={form.image}
-              alt="Preview"
-              className="w-32 h-32 object-cover rounded mt-2"
-            />
+            <img src={form.image} alt="Preview" className="w-32 h-32 object-cover rounded mt-2" />
           )}
 
           <label className="font-medium text-gray-700">Title</label>
@@ -185,6 +186,37 @@ export default function ProductsPage() {
             className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
+          {/* NEW FIELDS */}
+          <label className="font-medium text-gray-700">Shipping Fees</label>
+          <input
+            type="number"
+            name="shippingFees"
+            value={form.shippingFees}
+            onChange={handleChange}
+            placeholder="Enter Shipping Fees"
+            className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <label className="font-medium text-gray-700">Other Charges</label>
+          <input
+            type="number"
+            name="otherCharges"
+            value={form.otherCharges}
+            onChange={handleChange}
+            placeholder="Enter Other Charges"
+            className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <label className="font-medium text-gray-700">Discount</label>
+          <input
+            type="number"
+            name="discount"
+            value={form.discount}
+            onChange={handleChange}
+            placeholder="Enter Discount (%)"
+            className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
           <div className="flex gap-2 mt-4">
             <button
               type="submit"
@@ -213,6 +245,9 @@ export default function ProductsPage() {
             <th className="p-3">Title</th>
             <th className="p-3">Description</th>
             <th className="p-3">Price</th>
+            <th className="p-3">Shipping</th>
+            <th className="p-3">Other Charges</th>
+            <th className="p-3">Discount</th>
             <th className="p-3">Category</th>
             <th className="p-3">Status</th>
             <th className="p-3">Quantity</th>
@@ -223,7 +258,7 @@ export default function ProductsPage() {
         <tbody>
           {products.length === 0 && (
             <tr>
-              <td colSpan="9" className="p-4 text-center text-gray-500">
+              <td colSpan="12" className="p-4 text-center text-gray-500">
                 No products added yet
               </td>
             </tr>
@@ -232,16 +267,15 @@ export default function ProductsPage() {
             <tr key={p.id} className="border-b hover:bg-gray-50 transition">
               <td className="p-2">
                 {p.image && (
-                  <img
-                    src={p.image}
-                    alt={p.title}
-                    className="w-16 h-16 object-cover rounded"
-                  />
+                  <img src={p.image} alt={p.title} className="w-16 h-16 object-cover rounded" />
                 )}
               </td>
               <td className="p-2 font-medium">{p.title}</td>
               <td className="p-2">{p.description}</td>
               <td className="p-2">${p.price}</td>
+              <td className="p-2">${p.shippingFees || 0}</td>
+              <td className="p-2">${p.otherCharges || 0}</td>
+              <td className="p-2">{p.discount ? `${p.discount}%` : "0%"}</td>
               <td className="p-2">{p.category}</td>
               <td className="p-2">
                 <span
