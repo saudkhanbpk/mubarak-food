@@ -1,75 +1,92 @@
 'use client';
+import { useCart } from "@/context/cartcontext";
 import React, { useState, useEffect } from 'react';
 import { Search, ShoppingCart, Filter } from 'lucide-react';
-import toast, { Toaster } from "react-hot-toast"; // 👈 For popup notifications
+import toast, { Toaster } from "react-hot-toast";
 
 const Page = () => {
-  const categories = [
-    "All",
-    "Lentils & Whole Gr..",
-    "Noodles",
-    "Pickles, Sauces & ..",
-    "Ready-Made Mixes",
-    "Savoury Snacks",
-    "Misc. Flours and F..",
-    "Pickles",
-    "Ground Spices",
-    "Street Foods",
-    "Spice Blends",
-  ];
-
+  const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [filter, setFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState(""); 
+  const [suggestions, setSuggestions] = useState([]); 
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 20;
 
-  // ✅ Load products
+  // ✅ Load products & categories from API
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedProducts = JSON.parse(localStorage.getItem("products")) || [];
-      setProducts(savedProducts);
-    }
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) setProducts(data.data);
+      });
+
+    fetch("/api/category")
+      .then((res) => res.json())
+      .then((data) => {
+        const categoriesFromAPI = data.data || [];
+        setCategories([{ _id: "all", name: "All" }, ...categoriesFromAPI]);
+      });
   }, []);
 
-  // ✅ Add to Cart
-  const handleAddToCart = (product) => {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  // ✅ Debounce effect (wait 300ms before applying query)
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
-    // ensure product has unique id
-    const productWithId = {
-      ...product,
-      id: product.id || Date.now().toString(),
-    };
+  // ✅ Add to Cart (still localStorage for now)
+  const { updateCartCount } = useCart();
 
-    // check if already exists
-    const existingIndex = cart.findIndex((item) => item.id === productWithId.id);
-    if (existingIndex > -1) {
-      cart[existingIndex].quantity += 1;
-    } else {
-      cart.push({ ...productWithId, quantity: 1 });
+const handleAddToCart = (product) => {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const productWithId = { ...product, id: product._id || Date.now().toString() };
+
+  const existingIndex = cart.findIndex((item) => item.id === productWithId.id);
+  if (existingIndex > -1) {
+    cart[existingIndex].quantity += 1;
+  } else {
+    cart.push({ ...productWithId, quantity: 1 });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  // ✅ Update cart count in navbar
+  updateCartCount();
+
+  toast.success(`${productWithId.title} added to cart!`, {
+    style: { borderRadius: "12px", background: "#333", color: "#fff" },
+    icon: "🛒",
+  });
+};
+
+
+  // ✅ Suggestions update
+  useEffect(() => {
+    if (debouncedQuery.trim() === "") {
+      setSuggestions([]);
+      return;
     }
 
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    // Stylish toast
-    toast.success(`${productWithId.title} added to cart!`, {
-      style: {
-        borderRadius: "12px",
-        background: "#333",
-        color: "#fff",
-      },
-      icon: "🛒",
-    });
-  };
+    const lowerQ = debouncedQuery.toLowerCase();
+    const matched = products.filter(
+      (p) =>
+        p.title.toLowerCase().includes(lowerQ) ||
+        p.category.toLowerCase().includes(lowerQ)
+    );
+    setSuggestions(matched.slice(0, 5)); 
+  }, [debouncedQuery, products]);
 
   // ✅ Search + Filter
   const filteredProducts = products.filter((product) => {
     const matchesCategory = filter === "All" || product.category === filter;
     const matchesSearch =
-      product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchQuery.toLowerCase());
+      product.title.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
+      product.description.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
+      product.category.toLowerCase().includes(debouncedQuery.toLowerCase());
 
     return matchesCategory && matchesSearch;
   });
@@ -82,7 +99,7 @@ const Page = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, filter]);
+  }, [debouncedQuery, filter]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -114,24 +131,24 @@ const Page = () => {
             <h2 className="text-2xl font-black text-gray-800">Filter by Categories</h2>
           </div>
           <div className="flex flex-wrap gap-3">
-            {categories.map((cat, i) => (
+            {categories.map((cat) => (
               <button
-                key={i}
-                onClick={() => setFilter(cat)}
+                key={cat._id}
+                onClick={() => setFilter(cat.name)}
                 className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
-                  filter === cat
+                  filter === cat.name
                     ? "bg-gradient-to-r from-orange-400 to-red-400 text-white shadow-lg"
                     : "bg-gray-100 text-gray-700 border hover:border-orange-300"
                 }`}
               >
-                {cat}
+                {cat.name}
               </button>
             ))}
           </div>
         </div>
 
         {/* Search */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 relative">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
               <h2 className="text-3xl font-black text-gray-800 mb-2">All Products</h2>
@@ -143,7 +160,7 @@ const Page = () => {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder="Search products by name or category..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-orange-400"
@@ -155,6 +172,25 @@ const Page = () => {
                 >
                   ✕
                 </button>
+              )}
+
+              {/* ✅ Suggestions Dropdown */}
+              {suggestions.length > 0 && (
+                <div className="absolute left-0 right-0 mt-1 bg-white border rounded-xl shadow-lg z-50">
+                  {suggestions.map((sug, idx) => (
+                    <div
+                      key={idx}
+                      className="px-4 py-2 cursor-pointer hover:bg-orange-100"
+                      onClick={() => {
+                        setSearchQuery(sug.title);
+                        setSuggestions([]);
+                      }}
+                    >
+                      <p className="font-medium text-gray-800">{sug.title}</p>
+                      <p className="text-xs text-gray-500">{sug.category}</p>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           </div>
@@ -171,7 +207,7 @@ const Page = () => {
           ) : (
             currentProducts.map((product) => (
               <div
-                key={product.id || product.title}
+                key={product._id}
                 className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-2xl transition transform hover:-translate-y-2"
               >
                 <div className="relative h-56">

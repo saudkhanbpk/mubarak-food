@@ -15,7 +15,7 @@ export default function OrderNowPage() {
     state: "",
     postalCode: "",
     instructions: "",
-    payment: "Credit Card",
+    payment: "Cash on Delivery", // ✅ Default fixed
   });
 
   useEffect(() => {
@@ -29,11 +29,37 @@ export default function OrderNowPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Order Submitted:", { form, checkoutData });
-    alert("Order submitted successfully!");
-    localStorage.removeItem("checkoutData");
+
+    const orderData = {
+      ...form,
+      items: checkoutData.items,
+      subtotal,
+      shippingFees,
+      otherCharges,
+      discount,
+      total,
+    };
+
+    try {
+      const res = await fetch("/api/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert("✅ Order submitted successfully!");
+        localStorage.removeItem("checkoutData");
+      } else {
+        alert("❌ Order failed: " + data.error);
+      }
+    } catch (err) {
+      console.error("Order Error:", err);
+      alert("❌ Something went wrong");
+    }
   };
 
   // Totals calculations
@@ -42,7 +68,6 @@ export default function OrderNowPage() {
     0
   );
 
-  // Shipping & Other Charges counted only once (from first product)
   const shippingFees = checkoutData.items.length > 0
     ? parseFloat(checkoutData.items[0].shippingFees || 0)
     : 0;
@@ -51,7 +76,6 @@ export default function OrderNowPage() {
     ? parseFloat(checkoutData.items[0].otherCharges || 0)
     : 0;
 
-  // Discount per product
   const discount = checkoutData.items.reduce(
     (acc, item) =>
       acc +
@@ -96,23 +120,17 @@ export default function OrderNowPage() {
             />
 
             <label className="block text-sm font-medium text-slate-700">Phone Number</label>
-            <div className="flex">
-              <span className="inline-flex items-center px-3 rounded-l border border-r-0 bg-gray-100 text-gray-700">+358</span>
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Phone Number"
-                value={form.phone}
-                onChange={handleChange}
-                className="w-full border px-3 py-2 rounded-r"
-                required
-              />
-            </div>
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Enter Phone Number"
+              value={form.phone}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded"
+              required
+            />
 
-            <label className="block text-sm font-medium text-slate-700 flex justify-between items-center">
-              Drop Off Address
-              <button type="button" className="text-sm text-orange-500 hover:underline">Edit</button>
-            </label>
+            <label className="block text-sm font-medium text-slate-700">Drop Off Address</label>
             <input
               type="text"
               name="dropOffAddress"
@@ -172,26 +190,15 @@ export default function OrderNowPage() {
               className="w-full border px-3 py-2 rounded"
             ></textarea>
 
-            <label className="block text-sm font-medium text-slate-700 mt-2">Payment Option</label>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="payment"
-                  value="Credit Card"
-                  checked={form.payment === "Credit Card"}
-                  onChange={handleChange}
-                  className="form-radio"
-                />
-                Credit Card
-              </label>
+            {/* Payment Fixed */}
+            <div className="mt-2">
               <label className="flex items-center gap-2">
                 <input
                   type="radio"
                   name="payment"
                   value="Cash on Delivery"
-                  checked={form.payment === "Cash on Delivery"}
-                  onChange={handleChange}
+                  checked={true}
+                  readOnly
                   className="form-radio"
                 />
                 Cash on Delivery

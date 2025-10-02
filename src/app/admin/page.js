@@ -7,15 +7,31 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (email === "admin@example.com" && password === "12345") {
+  const handleLogin = async (e) => {
+  e.preventDefault();
+
+  try {
+    
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
       localStorage.setItem("adminToken", "true");
       router.push("/admin/dashboard");
     } else {
-      alert("Invalid credentials");
+      alert(data.error || "Invalid credentials");
     }
-  };
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong");
+  }
+};
+
 
   return (
     <form

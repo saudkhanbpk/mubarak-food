@@ -19,39 +19,70 @@ export default function ProductsPage() {
   });
   const [editProduct, setEditProduct] = useState(null);
 
-  // const categories = ["Chilli Powder", "Edible Pink Salt", "Pink Salt Lamp", "Other"];
+  // ✅ Load categories from API
   useEffect(() => {
     fetch("/api/category")
       .then((res) => res.json())
-      .then((data) => setCategories(data.data|| []));
+      .then((data) => setCategories(data.data || []));
   }, []);
 
-  // Load products from localStorage once
+  // ✅ Load products from API
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedProducts = JSON.parse(localStorage.getItem("products")) || [];
-      setProducts(savedProducts);
-    }
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) setProducts(data.data);
+      });
   }, []);
 
-  // Save products to localStorage whenever they change
-  useEffect(() => {
-    if (typeof window !== "undefined" && products.length > 0) {
-      localStorage.setItem("products", JSON.stringify(products));
-    }
-  }, [products]);
+  // ✅ Add or Update Product
+  const addOrUpdateProduct = async (e) => {
+    e.preventDefault();
 
+    if (editProduct) {
+      // Update product
+      const res = await fetch(`/api/products/${editProduct}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setProducts((prev) =>
+          prev.map((p) => (p._id === editProduct ? data.data : p))
+        );
+        setEditProduct(null);
+      }
+    } else {
+      // Add product
+      const res = await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setProducts([...products, data.data]);
+      }
+    }
+
+    resetForm();
+  };
+
+  // ✅ Handle Form Change
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "image" && files && files[0]) {
       const reader = new FileReader();
-      reader.onloadend = () => setForm((prev) => ({ ...prev, image: reader.result }));
+      reader.onloadend = () =>
+        setForm((prev) => ({ ...prev, image: reader.result }));
       reader.readAsDataURL(files[0]);
     } else {
       setForm((prev) => ({ ...prev, [name]: value }));
     }
   };
 
+  // ✅ Reset Form
   const resetForm = () =>
     setForm({
       image: "",
@@ -67,22 +98,10 @@ export default function ProductsPage() {
       discount: "",
     });
 
-  const addOrUpdateProduct = (e) => {
-    e.preventDefault();
-    if (editProduct) {
-      setProducts((prev) =>
-        prev.map((p) => (p.id === editProduct ? { ...form, id: editProduct } : p))
-      );
-      setEditProduct(null);
-    } else {
-      setProducts([...products, { ...form, id: Date.now() }]);
-    }
-    resetForm();
-  };
-
+  // ✅ Start editing
   const startEdit = (p) => {
     setForm({ ...p });
-    setEditProduct(p.id);
+    setEditProduct(p._id);
   };
 
   const cancelEdit = () => {
@@ -90,20 +109,41 @@ export default function ProductsPage() {
     setEditProduct(null);
   };
 
-  const deleteProduct = (id) => setProducts(products.filter((p) => p.id !== id));
+  // ✅ Delete Product
+  const deleteProduct = async (id) => {
+    const res = await fetch(`/api/products/${id}`, { method: "DELETE" });
+    const data = await res.json();
+    if (data.success) {
+      setProducts(products.filter((p) => p._id !== id));
+    }
+  };
 
-  const updateQuantity = (id, type) =>
-    setProducts((prev) =>
-      prev.map((p) =>
-        p.id === id
-          ? { ...p, quantity: type === "inc" ? p.quantity + 1 : Math.max(0, p.quantity - 1) }
-          : p
-      )
-    );
+  // ✅ Update Quantity
+  const updateQuantity = async (id, type) => {
+    const product = products.find((p) => p._id === id);
+    if (!product) return;
+
+    const updatedQuantity =
+      type === "inc" ? product.quantity + 1 : Math.max(0, product.quantity - 1);
+
+    const res = await fetch(`/api/products/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...product, quantity: updatedQuantity }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      setProducts((prev) =>
+        prev.map((p) => (p._id === id ? data.data : p))
+      );
+    }
+  };
 
   return (
     <div className="p-6 md:p-10">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Products Management</h1>
+      <h1 className="text-3xl font-bold mb-6 text-gray-800">
+        Products Management
+      </h1>
 
       {/* Product Form */}
       <form
@@ -111,6 +151,7 @@ export default function ProductsPage() {
         className="bg-white p-6 rounded-xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-6 mb-10"
       >
         <div className="flex flex-col gap-2">
+          {/* Image */}
           <label className="font-medium text-gray-700">Product Image</label>
           <input
             type="file"
@@ -120,9 +161,14 @@ export default function ProductsPage() {
             className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {form.image && (
-            <img src={form.image} alt="Preview" className="w-32 h-32 object-cover rounded mt-2" />
+            <img
+              src={form.image}
+              alt="Preview"
+              className="w-32 h-32 object-cover rounded mt-2"
+            />
           )}
 
+          {/* Title */}
           <label className="font-medium text-gray-700">Title</label>
           <input
             type="text"
@@ -134,6 +180,7 @@ export default function ProductsPage() {
             required
           />
 
+          {/* Description */}
           <label className="font-medium text-gray-700">Description</label>
           <textarea
             name="description"
@@ -144,6 +191,7 @@ export default function ProductsPage() {
             required
           />
 
+          {/* Price */}
           <label className="font-medium text-gray-700">Price</label>
           <input
             type="number"
@@ -155,6 +203,7 @@ export default function ProductsPage() {
             required
           />
 
+          {/* Category */}
           <label className="font-medium text-gray-700">Category</label>
           <select
             name="category"
@@ -164,14 +213,14 @@ export default function ProductsPage() {
             required
           >
             <option value="">Select Category</option>
-            {Array.isArray(categories) &&
-            categories.map((c) => (
+            {categories.map((c) => (
               <option key={c._id} value={c.name}>
                 {c.name}
               </option>
             ))}
           </select>
 
+          {/* Status */}
           <label className="font-medium text-gray-700">Status</label>
           <select
             name="status"
@@ -183,6 +232,7 @@ export default function ProductsPage() {
             <option value="out-of-stock">Out of Stock</option>
           </select>
 
+          {/* Weight */}
           <label className="font-medium text-gray-700">Weight</label>
           <input
             type="text"
@@ -193,7 +243,7 @@ export default function ProductsPage() {
             className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
-          {/* NEW FIELDS */}
+          {/* Shipping Fees */}
           <label className="font-medium text-gray-700">Shipping Fees</label>
           <input
             type="number"
@@ -204,6 +254,7 @@ export default function ProductsPage() {
             className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
+          {/* Other Charges */}
           <label className="font-medium text-gray-700">Other Charges</label>
           <input
             type="number"
@@ -214,6 +265,7 @@ export default function ProductsPage() {
             className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
+          {/* Discount */}
           <label className="font-medium text-gray-700">Discount</label>
           <input
             type="number"
@@ -224,6 +276,7 @@ export default function ProductsPage() {
             className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
+          {/* Buttons */}
           <div className="flex gap-2 mt-4">
             <button
               type="submit"
@@ -271,10 +324,14 @@ export default function ProductsPage() {
             </tr>
           )}
           {products.map((p) => (
-            <tr key={p.id} className="border-b hover:bg-gray-50 transition">
+            <tr key={p._id} className="border-b hover:bg-gray-50 transition">
               <td className="p-2">
                 {p.image && (
-                  <img src={p.image} alt={p.title} className="w-16 h-16 object-cover rounded" />
+                  <img
+                    src={p.image}
+                    alt={p.title}
+                    className="w-16 h-16 object-cover rounded"
+                  />
                 )}
               </td>
               <td className="p-2 font-medium">{p.title}</td>
@@ -286,22 +343,23 @@ export default function ProductsPage() {
               <td className="p-2">{p.category}</td>
               <td className="p-2">
                 <span
-                  className={`px-2 py-1 rounded text-white text-sm ${p.status === "available" ? "bg-green-500" : "bg-red-500"
-                    }`}
+                  className={`px-2 py-1 rounded text-white text-sm ${
+                    p.status === "available" ? "bg-green-500" : "bg-red-500"
+                  }`}
                 >
                   {p.status === "available" ? "Available" : "Out of Stock"}
                 </span>
               </td>
               <td className="p-2 flex items-center gap-2">
                 <button
-                  onClick={() => updateQuantity(p.id, "dec")}
+                  onClick={() => updateQuantity(p._id, "dec")}
                   className="px-2 bg-gray-300 rounded hover:bg-gray-400 transition"
                 >
                   -
                 </button>
                 {p.quantity}
                 <button
-                  onClick={() => updateQuantity(p.id, "inc")}
+                  onClick={() => updateQuantity(p._id, "inc")}
                   className="px-2 bg-gray-300 rounded hover:bg-gray-400 transition"
                 >
                   +
@@ -316,7 +374,7 @@ export default function ProductsPage() {
                   Edit
                 </button>
                 <button
-                  onClick={() => deleteProduct(p.id)}
+                  onClick={() => deleteProduct(p._id)}
                   className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition"
                 >
                   Delete

@@ -1,7 +1,8 @@
 "use client"; // ✅ Make this a client component
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { CartProvider } from "@/context/cartcontext";
+
 import "./globals.css";
 import { usePathname } from "next/navigation";
 
@@ -11,10 +12,15 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body>
+      <body
+        cz-shortcut-listen="true" >
+          <CartProvider>
         {!isAdminRoute && <Navbar />}
-        <main>{children}</main>
+        <main> 
+        {children}
+        </main>
         {!isAdminRoute && <Footer />}
+        </CartProvider>
       </body>
     </html>
   );
