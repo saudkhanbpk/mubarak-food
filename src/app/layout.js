@@ -10,6 +10,8 @@ export default function RootLayout({ children }) {
   const pathname = usePathname();
   const isAdminRoute = pathname.includes("admin"); // check if 'admin' is in the URL
 
+  
+
   return (
     <html lang="en">
       <body
