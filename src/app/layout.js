@@ -2,6 +2,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { CartProvider } from "@/context/cartcontext";
+
 import "./globals.css";
 import { usePathname } from "next/navigation";
 
