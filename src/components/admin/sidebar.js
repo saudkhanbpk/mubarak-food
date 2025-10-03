@@ -58,17 +58,17 @@ export function AdminSidebar() {
 
   const menuItems = [
     { label: "Dashboard", href: "/admin/dashboard" },
-    { label: "Orders", href: "/admin/orders" },
-    { label: "Products", href: "/admin/products" },
-    { label: "Add Categories", href: "/admin/category" },
-    { label: "Contact", href: "/admin/contact" },
+     { label: "Add Products", href: "/admin/products" },
+     { label: "Add Categories", href: "/admin/categroy" },
+    { label: "See Orders", href: "/admin/orders" },
+    { label: "See Contact", href: "/admin/contact" },
   ];
 
   return (
     <>
       {/* Mobile Toggle Button */}
       <button
-        className="lg:hidden p-3 m-3 bg-gray-200 rounded-md z-50 relative"
+        className="lg:hidden p-3 m-3 bg-gray-200 w-64 h-screen rounded-md z-50 relative"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -87,7 +87,7 @@ export function AdminSidebar() {
         className={`fixed lg:static top-0 left-0 h-full w-64 bg-white shadow-lg p-6 transform transition-transform duration-300 z-50 
           ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
       >
-        <h2 className="font-bold text-xl mb-6 text-blue-600">Admin Panel</h2>
+        <h2 className="text-xl mb-6 font-black text-orange-600">Admin Deshboard</h2>
         <nav className="flex flex-col gap-2">
           {menuItems.map((item) => (
             <a
@@ -95,7 +95,7 @@ export function AdminSidebar() {
               href={item.href}
               className={`px-4 py-2 rounded-lg transition ${
                 pathname === item.href
-                  ? "bg-blue-500 text-white font-medium"
+                  ? "bg-orange-500 text-white font-medium"
                   : "text-gray-700 hover:bg-gray-200"
               }`}
               onClick={() => setIsOpen(false)} // close sidebar after navigation
@@ -105,7 +105,7 @@ export function AdminSidebar() {
           ))}
         </nav>
 
-        <button
+        {/* <button
           onClick={() => {
             localStorage.removeItem("adminToken");
             router.push("/admin");
@@ -114,7 +114,7 @@ export function AdminSidebar() {
           className="mt-6 bg-red-500 text-white px-4 py-2 rounded-lg transition hover:bg-red-600"
         >
           Logout
-        </button>
+        </button> */}
       </aside>
     </>
   );

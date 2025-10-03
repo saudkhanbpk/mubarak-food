@@ -140,7 +140,7 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="p-6 md:p-10">
+    <div className="p-6 md:p-10 text-gray-700">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">
         Products Management
       </h1>
@@ -273,14 +273,14 @@ export default function ProductsPage() {
             value={form.discount}
             onChange={handleChange}
             placeholder="Enter Discount (%)"
-            className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
 
           {/* Buttons */}
           <div className="flex gap-2 mt-4">
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded w-full transition"
+              className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded w-full transition"
             >
               {editProduct ? "Update Product" : "Add Product"}
             </button>

@@ -64,7 +64,7 @@ export default function AdminContactPage() {
             </div>
             <button
                 onClick={fetchMessages}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
             >
                 Retry
             </button>
@@ -72,7 +72,7 @@ export default function AdminContactPage() {
     );
 
     return (
-        <section className="p-8">
+        <section className="p-8 text-gray-700">
             <h2 className="text-3xl font-bold mb-6">Contact Messages</h2>
 
             {messages.length === 0 ? (

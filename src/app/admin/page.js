@@ -22,6 +22,7 @@ export default function AdminLogin() {
 
     if (res.ok) {
       localStorage.setItem("adminToken", "true");
+      localStorage.setItem("adminemail",email)
       router.push("/admin/dashboard");
     } else {
       alert(data.error || "Invalid credentials");
@@ -36,24 +37,24 @@ export default function AdminLogin() {
   return (
     <form
       onSubmit={handleLogin}
-      className="bg-white p-8 rounded shadow-md w-96"
+      className="bg-white p-8 text-gray-700 rounded shadow-md w-96"
     >
-      <h2 className="text-2xl font-bold mb-6">Admin Login</h2>
+      <h2 className="text-2xl text-gray-700 font-bold mb-6">Admin Login</h2>
       <input
         type="email"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="w-full border p-2 mb-4"
+        className="w-full border p-2 mb-4 text-gray-700 "
       />
       <input
         type="password"
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="w-full border p-2 mb-4"
+        className="w-full border p-2 mb-4 text-gray-700 "
       />
-      <button className="bg-blue-600 text-white px-4 py-2 rounded w-full">
+      <button className="bg-orange-600 text-white px-4 py-2 rounded w-full">
         Login
       </button>
     </form>

@@ -46,7 +46,7 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 text-gray-700">
       <h1 className="text-2xl font-bold mb-4">Manage Categories</h1>
 
       {/* Add Category Form */}

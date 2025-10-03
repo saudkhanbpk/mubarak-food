@@ -78,7 +78,7 @@ export default function OrdersPage() {
   };
 
   return (
-    <div>
+    <div className="text-gray-700">
       {/* ✅ Header with Download Button */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">All Orders</h1>

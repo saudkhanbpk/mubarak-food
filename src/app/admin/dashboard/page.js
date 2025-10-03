@@ -1,7 +1,65 @@
+"use client"
+import { FaRegUserCircle } from "react-icons/fa";
+import { useState ,useEffect } from "react";
+
 export default function DashboardPage() {
+
+  const [showMenu, setShowMenu] = useState(false);
+const [email, setEmail] = useState("");
+
+useEffect(() => {
+  // Get email from localStorage (if saved during login)
+  const storedEmail = localStorage.getItem("adminEmail");
+  if (storedEmail) setEmail(storedEmail);
+}, []);
+
+const handleLogout = () => {
+  localStorage.removeItem("adminToken");
+  localStorage.removeItem("adminEmail");
+  window.location.href = "/admin"; // redirect to login page
+};
+
+const handleChangePassword = () => {
+  window.location.href = "/admin/changepassword"; // create this route later
+};
+
+
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+    <div className="text-gray-700">
+      <div className="flex justify-between items-center relative">
+        <h1 className="text-3xl font-bold mb-6 text-gray-700">Dashboard</h1>
+
+        {/* Profile Icon */}
+        <div className="relative">
+          <FaRegUserCircle
+            size={32}
+            className="text-orange-500 cursor-pointer"
+            onClick={() => setShowMenu(!showMenu)}
+          />
+
+          {/* Dropdown */}
+          {showMenu && (
+            <div className="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-lg py-2 z-50">
+              <div className="px-4 py-2 text-gray-700 border-b">
+                <p className="text-sm font-semibold">Logged in as</p>
+                <p className="text-sm">{email || "admin@example.com"}</p>
+              </div>
+              <button
+                onClick={handleChangePassword}
+                className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Change Password
+              </button>
+              <button
+                onClick={handleLogout}
+                className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-100"
+              >
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Revenue Card */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
