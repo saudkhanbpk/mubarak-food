@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -8,30 +9,44 @@ export default function AdminLogin() {
   const router = useRouter();
 
   const handleLogin = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
 
-    const data = await res.json();
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (res.ok) {
-      localStorage.setItem("adminToken", "true");
-      localStorage.setItem("adminemail",email)
-      router.push("/admin/dashboard");
-    } else {
-      alert(data.error || "Invalid credentials");
+      const data = await res.json();
+
+      if (res.ok) {
+        Swal.fire({
+          title: "Good job!",
+          text: "Login successFully!",
+          icon: "success"
+        });
+        localStorage.setItem("adminToken", "true");
+        localStorage.setItem("adminemail", email)
+        router.push("/admin/dashboard");
+      } else {
+        // alert(data.error || "Invalid credentials");
+        Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: data.error || "Invalid credentials"
+      });
+      }
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
+      });
     }
-  } catch (err) {
-    console.error(err);
-    alert("Something went wrong");
-  }
-};
+  };
 
 
   return (

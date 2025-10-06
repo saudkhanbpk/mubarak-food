@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Package } from "lucide-react";
+import Swal from "sweetalert2";
 
 export default function OrderNowPage() {
   const [checkoutData, setCheckoutData] = useState({ items: [] });
@@ -51,14 +52,30 @@ export default function OrderNowPage() {
 
       const data = await res.json();
       if (data.success) {
-        alert("✅ Order submitted successfully!");
+        // alert("✅ Order submitted successfully!");
+        Swal.fire({
+          title: "Good job!",
+          text: "Order submitted successfully!",
+          icon: "success"
+        });
         localStorage.removeItem("checkoutData");
       } else {
-        alert("❌ Order failed: " + data.error);
+        // alert("❌ Order failed: " + data.error);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "❌ Order failed: " + data.error,
+
+        });
       }
     } catch (err) {
       console.error("Order Error:", err);
-      alert("❌ Something went wrong");
+      // alert("❌ Something went wrong");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong!",
+      });
     }
   };
 

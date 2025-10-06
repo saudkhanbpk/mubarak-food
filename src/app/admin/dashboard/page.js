@@ -1,27 +1,33 @@
 "use client"
 import { FaRegUserCircle } from "react-icons/fa";
-import { useState ,useEffect } from "react";
+import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 
 export default function DashboardPage() {
 
   const [showMenu, setShowMenu] = useState(false);
-const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("");
 
-useEffect(() => {
-  // Get email from localStorage (if saved during login)
-  const storedEmail = localStorage.getItem("adminEmail");
-  if (storedEmail) setEmail(storedEmail);
-}, []);
+  useEffect(() => {
+    // Get email from localStorage (if saved during login)
+    const storedEmail = localStorage.getItem("adminEmail");
+    if (storedEmail) setEmail(storedEmail);
+  }, []);
 
-const handleLogout = () => {
-  localStorage.removeItem("adminToken");
-  localStorage.removeItem("adminEmail");
-  window.location.href = "/admin"; // redirect to login page
-};
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Good job!",
+      text: "Logout successfully!",
+      icon: "success"
+    });
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("adminEmail");
+    window.location.href = "/admin"; // redirect to login page
+  };
 
-const handleChangePassword = () => {
-  window.location.href = "/admin/changepassword"; // create this route later
-};
+  const handleChangePassword = () => {
+    window.location.href = "/admin/changepassword"; 
+  };
 
 
   return (

@@ -108,11 +108,11 @@ const handleAddToCart = (product) => {
       {/* Hero */}
       <div className="relative w-full h-[60vh] mb-8 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-red-400 opacity-90 z-10"></div>
-        <img
+        {/* <img
           src="https://images.unsplash.com/photo-1534483509719-3feaee7c30da?w=1200"
           alt="Product Showcase"
           className="w-full h-full object-cover"
-        />
+        /> */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white z-20">
           <h1 className="text-4xl md:text-6xl font-black mb-4 text-center">
             Premium Products
@@ -123,7 +123,7 @@ const handleAddToCart = (product) => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         {/* Filter */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
           <div className="flex items-center gap-3 mb-4">
@@ -210,7 +210,7 @@ const handleAddToCart = (product) => {
                 key={product._id}
                 className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-2xl transition transform hover:-translate-y-2"
               >
-                <div className="relative h-56">
+                <div className="relative h-56 border border-orange-200">
                   {product.image ? (
                     <img
                       src={product.image}
@@ -228,20 +228,24 @@ const handleAddToCart = (product) => {
                 </div>
 
                 <div className="p-4">
-                  <h3 className="font-bold text-lg mb-1">{product.title}</h3>
+                  <h3 className="font-bold text-lg mb-1 text-gray-700">{product.title}</h3>
                   <p className="text-xs text-gray-500 mb-3">{product.description}</p>
+                  <div className="flex justify-between text-xs mb-2 text-gray-600">
+                      <span>Weight:</span>
+                      <span>{product.weight || "N/A"}</span>
+                    </div>
 
-                  <div className="bg-orange-50 rounded-lg p-3 mb-3 space-y-1">
+                  <div className="bg-orange-50 rounded-lg p-3 items-center mb-3 space-y-1">
                     <div className="flex justify-between">
-                      <span className="text-xs">Price:</span>
+                      <span className="text-xs text-gray-700">Price:</span>
                       <span className="text-xl font-black text-orange-500">
                         Rs {product.price}
                       </span>
                     </div>
-                    <div className="flex justify-between text-xs text-gray-600">
+                    {/* <div className="flex justify-between text-xs text-gray-600">
                       <span>Weight:</span>
                       <span>{product.weight || "N/A"}</span>
-                    </div>
+                    </div> */}
                   </div>
 
                   <button

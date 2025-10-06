@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin } from 'lucide-react';
+import Swal from 'sweetalert2'
 
 export default function ContactPage() {
     const [form, setForm] = useState({
@@ -27,7 +28,12 @@ export default function ContactPage() {
 
             const data = await res.json();
             if (res.ok) {
-                alert('✅ Message sent successfully!');
+                // alert('✅ Message sent successfully!');
+                Swal.fire({
+                    title: "Good job!",
+                    text: " Message sent successfully!",
+                    icon: "success"
+                });
                 setForm({ firstName: '', lastName: '', email: '', phone: '', message: '' });
             } else {
                 alert('❌ ' + data.error);

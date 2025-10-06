@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 export default function ChangePassword() {
   const [oldPassword, setOldPassword] = useState("");
@@ -19,25 +20,41 @@ export default function ChangePassword() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: localStorage.getItem("adminemail"), 
+          email: localStorage.getItem("adminemail"),
           oldPassword,
           newPassword,
         }),
       });
-console.log(res)
+      // console.log(res)
       const data = await res.json();
 
       if (res.ok) {
-        alert("Password changed successfully!");
+        // alert("Password changed successfully!");
+        Swal.fire({
+          title: "Good job!",
+          text: "Logout successfully!",
+          icon: "success"
+        });
+        localStorage.removeItem("adminToken");
+        localStorage.removeItem("adminEmail");
+        window.location.href = "/admin";
         setOldPassword("");
         setNewPassword("");
         setConfirmPassword("");
       } else {
-        alert(data.error || "Something went wrong");
+         Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: data.error 
+              });
       }
     } catch (err) {
       console.error(err);
-      alert("Error while changing password");
+      Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Error While Changing Password" 
+              });
     }
   };
 
