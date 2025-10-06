@@ -83,7 +83,7 @@ export default function AdminContactPage() {
                         <thead>
                             <tr className="bg-gray-100 text-left">
                                 <th className="p-3 border">First Name</th>
-                                <th className="p-3 border">Last Name</th>
+                                {/* <th className="p-3 border">Last Name</th> */}
                                 <th className="p-3 border">Email</th>
                                 <th className="p-3 border">Phone</th>
                                 <th className="p-3 border">Message</th>
@@ -94,11 +94,20 @@ export default function AdminContactPage() {
                         <tbody>
                             {messages.map((msg) => (
                                 <tr key={msg._id} className="hover:bg-gray-50">
-                                    <td className="p-3 border">{msg.firstName}</td>
-                                    <td className="p-3 border">{msg.lastName}</td>
+                                    <td className="p-3 border">{[msg.firstName, msg.lastName].filter(Boolean).join(" ")}</td>
+                                    {/* <td className="p-3 border">{msg.lastName}</td> */}
                                     <td className="p-3 border">{msg.email}</td>
                                     <td className="p-3 border">{msg.phone}</td>
-                                    <td className="p-3 border max-w-xs truncate">{msg.message}</td>
+                                    <td className="p-3 border">
+                                        <details>
+                                            <summary className="cursor-pointer text-orange-600 hover:underline">
+                                                View Message
+                                            </summary>
+                                            <div className="mt-2 max-w-md break-words">
+                                                {msg.message}
+                                            </div>
+                                        </details>
+                                    </td>
                                     <td className="p-3 border">{new Date(msg.createdAt).toLocaleString()}</td>
                                     <td className="p-3 border">
                                         <button

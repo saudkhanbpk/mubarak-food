@@ -101,7 +101,7 @@ export default function OrdersPage() {
               <th className="p-3 text-left">Phone</th>
               <th className="p-3 text-left">Product</th>
               <th className="p-3 text-left">Date</th>
-              <th className="p-3 text-left">Status</th>
+              {/* <th className="p-3 text-left">Status</th> */}
               <th className="p-3 text-left">Actions</th>
             </tr>
           </thead>
@@ -118,7 +118,7 @@ export default function OrdersPage() {
                 <td className="p-3">
                   {new Date(o.createdAt).toLocaleDateString()}
                 </td>
-                <td className="p-3">
+                {/* <td className="p-3">
                   <select
                     value={o.status}
                     onChange={(e) => updateStatus(o._id, e.target.value)}
@@ -128,7 +128,7 @@ export default function OrdersPage() {
                     <option value="Shipped">Shipped</option>
                     <option value="Delivered">Delivered</option>
                   </select>
-                </td>
+                </td> */}
                 <td className="p-3 flex gap-3">
                   <button
                     className="text-blue-600 hover:text-blue-800"

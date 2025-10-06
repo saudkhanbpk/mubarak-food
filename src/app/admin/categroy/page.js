@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 export default function CategoriesPage() {
   const [categories, setCategories] = useState([]);
   const [name, setName] = useState("");
+  const [showForm, setShowForm] = useState(false); // 👈 for toggling form visibility
 
+  // Fetch all categories
   useEffect(() => {
     fetch("/api/category")
       .then((res) => res.json())
@@ -13,6 +15,7 @@ export default function CategoriesPage() {
       });
   }, []);
 
+  // Add new category
   const addCategory = async (e) => {
     e.preventDefault();
     if (!name) return;
@@ -25,14 +28,18 @@ export default function CategoriesPage() {
 
     const result = await res.json();
     if (res.ok && result.success) {
-      setCategories([result.data, ...categories]); // add new at top
+      setCategories([result.data, ...categories]);
       setName("");
+      setShowForm(false); // 👈 hide form after adding
     } else {
       console.error("Failed to add category:", result.error);
     }
   };
 
+  // Delete a category
   const deleteCategory = async (id) => {
+    if (!confirm("Are you sure you want to delete this category?")) return;
+
     const res = await fetch(`/api/category/${id}`, {
       method: "DELETE",
     });
@@ -47,21 +54,39 @@ export default function CategoriesPage() {
 
   return (
     <div className="p-6 text-gray-700">
-      <h1 className="text-2xl font-bold mb-4">Manage Categories</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Manage Categories</h1>
 
-      {/* Add Category Form */}
-      <form onSubmit={addCategory} className="flex gap-2 mb-6">
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Category name"
-          className="border px-3 py-2 rounded w-full"
-        />
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
-          Add
+        {/* Toggle Button */}
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700"
+        >
+          {showForm ? "Cancel" : "Add Category"}
         </button>
-      </form>
+      </div>
+
+      {/* Add Category Form (visible when showForm = true) */}
+      {showForm && (
+        <form
+          onSubmit={addCategory}
+          className="flex flex-col sm:flex-row gap-2 mb-6 bg-gray-50 p-4 rounded border"
+        >
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter category name"
+            className="border px-3 py-2 rounded w-full"
+          />
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Save
+          </button>
+        </form>
+      )}
 
       {/* Categories Table */}
       <div className="overflow-x-auto">
