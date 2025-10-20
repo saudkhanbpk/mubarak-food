@@ -50,7 +50,7 @@ export default function Hero() {
           transition={{ duration: 0.9, delay: 0.6 }}
         >
           <a
-            href="/order"
+            href="/product"
             className="inline-flex items-center justify-center px-5 sm:px-6 md:px-7 py-3 
             rounded-full bg-gradient-to-r from-orange-400 to-red-400 text-white 
             text-sm sm:text-base md:text-lg font-semibold 
