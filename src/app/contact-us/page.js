@@ -118,9 +118,9 @@ export default function ContactPage() {
                     <div>
                         <h3 className="text-xl font-semibold text-gray-900 mb-4">Contact Information</h3>
                         <ul className="space-y-3 text-gray-700 mb-6">
-                            <li className="flex items-center space-x-2"> <Mail className="text-orange-500 w-5 h-5" /> <span>contact@apnadookan.fi</span> </li>
-                            <li className="flex items-center space-x-2"> <Phone className="text-orange-500 w-5 h-5" /> <span>+358 40 3209578</span> </li>
-                            <li className="flex items-center space-x-2"> <MapPin className="text-orange-500 w-5 h-5" /> <span>Klaneettitie 13, 00420 Helsinki</span> </li>
+                            <li className="flex items-center space-x-2"> <Mail className="text-orange-500 w-5 h-5" /> <span>mubarak12@gmail.com</span> </li>
+                            <li className="flex items-center space-x-2"> <Phone className="text-orange-500 w-5 h-5" /> <span>+92 3001181738</span> </li>
+                            <li className="flex items-center space-x-2"> <MapPin className="text-orange-500 w-5 h-5" /> <span>swabi </span> </li>
                         </ul>
                         <h3 className="text-xl font-semibold text-gray-900 mb-2">Our Location</h3>
                         <div className="overflow-hidden rounded-md shadow">

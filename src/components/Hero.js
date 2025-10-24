@@ -60,7 +60,7 @@ export default function Hero() {
             Order Now <ShoppingCart size={18} className="ml-2" />
           </a>
 
-          <a
+          {/* <a
             href="https://www.amazon.com/s?k=himalayan+pink+salt"
             target="_blank"
             rel="noopener noreferrer"
@@ -69,7 +69,7 @@ export default function Hero() {
             hover:bg-gray-800 transition"
           >
             Buy on Amazon
-          </a>
+          </a> */}
         </motion.div>
 
         {/* Customers */}

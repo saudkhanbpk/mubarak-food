@@ -6,7 +6,7 @@ const Message = () => {
             id: 1,
             message:
                 "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.",
-            name: "Adil",
+            name: "Nasir",
             location: "USA",
             avatar:
                 "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face",
@@ -18,7 +18,8 @@ const Message = () => {
             name: "Sarah",
             location: "Canada",
             avatar:
-                "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=60&h=60&fit=crop&crop=face",
+                "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face",
+
         },
         {
             id: 3,
