@@ -8,10 +8,12 @@ import {
   Package,
   CreditCard,
 } from "lucide-react";
+import { useCart } from "../../context/cartcontext";
 
 export default function CartPage() {
   const [cart, setCart] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const { updateCartCount } = useCart();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -30,6 +32,7 @@ export default function CartPage() {
   const removeFromCart = (index) => {
     const updated = cart.filter((_, i) => i !== index);
     setCart(updated);
+    updateCartCount();
   };
 
   const clearCart = () => setCart([]);
@@ -39,12 +42,14 @@ export default function CartPage() {
     const updated = [...cart];
     updated[index].quantity = qty;
     setCart(updated);
+    updateCartCount();
   };
 
   const incrementQuantity = (index) => {
     const updated = [...cart];
     updated[index].quantity = (updated[index].quantity || 1) + 1;
     setCart(updated);
+    updateCartCount();
   };
 
   const decrementQuantity = (index) => {
@@ -52,6 +57,7 @@ export default function CartPage() {
     if (updated[index].quantity > 1) {
       updated[index].quantity -= 1;
       setCart(updated);
+      updateCartCount();
     }
   };
 
