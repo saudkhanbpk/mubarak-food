@@ -312,7 +312,7 @@ export default function ProductsPage() {
               <th className="p-3">Discount</th>
               <th className="p-3">Category</th>
               <th className="p-3">Status</th>
-              <th className="p-3">Quantity</th>
+              {/* <th className="p-3">Quantity</th> */}
               <th className="p-3">Weight</th>
               <th className="p-3">Actions</th>
             </tr>
@@ -338,34 +338,19 @@ export default function ProductsPage() {
                 </td>
                 <td className="p-2 font-medium">{p.title}</td>
                 <td className="p-2">{p.description}</td>
-                <td className="p-2">${p.price}</td>
-                <td className="p-2">${p.shippingFees || 0}</td>
-                <td className="p-2">${p.otherCharges || 0}</td>
+                <td className="p-2">{p.price}</td>
+                <td className="p-2">{p.shippingFees || 0}</td>
+                <td className="p-2">{p.otherCharges || 0}</td>
                 <td className="p-2">{p.discount ? `${p.discount}%` : "0%"}</td>
                 <td className="p-2">{p.category}</td>
-                <td className="p-2">
+                <td className="p-2 text-center">
                   <span
-                    className={`px-2 py-1 rounded text-white text-sm ${p.status === "available" ? "bg-green-500" : "bg-red-500"
-                      }`}
-                  >
+                    className={`inline-block min-w-[110px] text-center font-semibold px-3 py-1 rounded-full text-white text-sm capitalize 
+                        ${p.status === "available" ? "bg-green-500" : "bg-red-500"}`}>
                     {p.status === "available" ? "Available" : "Out of Stock"}
                   </span>
                 </td>
-                <td className="p-2 flex items-center gap-2">
-                  <button
-                    onClick={() => updateQuantity(p._id, "dec")}
-                    className="px-2 bg-gray-300 rounded hover:bg-gray-400 transition"
-                  >
-                    -
-                  </button>
-                  {p.quantity}
-                  <button
-                    onClick={() => updateQuantity(p._id, "inc")}
-                    className="px-2 bg-gray-300 rounded hover:bg-gray-400 transition"
-                  >
-                    +
-                  </button>
-                </td>
+
                 <td className="p-2">{p.weight}</td>
                 <td className="p-2 flex gap-2">
                   <button

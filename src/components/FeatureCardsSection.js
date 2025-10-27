@@ -1,6 +1,7 @@
 import React from "react";
 import { ShoppingCart } from "lucide-react";
 
+
 export default function WhyMobarakFoods() {
   const cards = [
     {
@@ -41,7 +42,8 @@ export default function WhyMobarakFoods() {
               spices, excellence in every bite.
             </p>
 
-            <button className="group bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center gap-3 mx-auto lg:mx-0">
+            <button onClick={() => (window.location.href = "/product")}
+            className="group bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center gap-3 mx-auto lg:mx-0">
               Order Now
               <ShoppingCart
                 size={20}

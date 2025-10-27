@@ -327,19 +327,24 @@
 'use client';
 import { useCart } from "@/context/cartcontext";
 import React, { useState, useEffect } from 'react';
-import { Search, ShoppingCart, Filter } from 'lucide-react';
+import { Search, ShoppingCart, Filter, X } from 'lucide-react';
 import toast, { Toaster } from "react-hot-toast";
+// import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/navigation';
 
 const Page = () => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [filter, setFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState(""); 
-  const [suggestions, setSuggestions] = useState([]); 
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(true); // ✅ Loading state added
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const productsPerPage = 20;
+  // const navigate = useNavigate();
+  const router = useRouter();
 
   // ✅ Load products & categories from API
   useEffect(() => {
@@ -429,6 +434,12 @@ const Page = () => {
     setCurrentPage(1);
   }, [debouncedQuery, filter]);
 
+  const handleAddToCartClick = (product) => {
+    handleAddToCart(product);
+    setShowModal(true);
+  };
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <Toaster position="top-right" reverseOrder={false} />
@@ -458,11 +469,10 @@ const Page = () => {
               <button
                 key={cat._id}
                 onClick={() => setFilter(cat.name)}
-                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
-                  filter === cat.name
+                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${filter === cat.name
                     ? "bg-gradient-to-r from-orange-400 to-red-400 text-white shadow-lg"
                     : "bg-gray-100 text-gray-700 border hover:border-orange-300"
-                }`}
+                  }`}
               >
                 {cat.name}
               </button>
@@ -585,7 +595,7 @@ const Page = () => {
                       </div>
 
                       <button
-                        onClick={() => handleAddToCart(product)}
+                        onClick={() => handleAddToCartClick(product)}
                         className="w-full bg-gradient-to-r from-orange-400 to-red-400 text-white text-sm font-semibold py-2.5 rounded-xl hover:scale-105 transition flex items-center justify-center gap-2"
                       >
                         <ShoppingCart className="w-4 h-4" />
@@ -605,11 +615,10 @@ const Page = () => {
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className={`px-4 py-2 rounded-lg font-semibold ${
-                currentPage === 1
+              className={`px-4 py-2 rounded-lg font-semibold ${currentPage === 1
                   ? "bg-gray-100 text-gray-400"
                   : "bg-orange-400 text-white hover:bg-orange-500"
-              }`}
+                }`}
             >
               Previous
             </button>
@@ -629,11 +638,10 @@ const Page = () => {
                 <button
                   key={i}
                   onClick={() => setCurrentPage(pageNum)}
-                  className={`px-4 py-2 rounded-lg font-semibold ${
-                    currentPage === pageNum
+                  className={`px-4 py-2 rounded-lg font-semibold ${currentPage === pageNum
                       ? "bg-orange-500 text-white scale-110"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                    }`}
                 >
                   {pageNum}
                 </button>
@@ -643,17 +651,51 @@ const Page = () => {
             <button
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
-              className={`px-4 py-2 rounded-lg font-semibold ${
-                currentPage === totalPages
+              className={`px-4 py-2 rounded-lg font-semibold ${currentPage === totalPages
                   ? "bg-gray-100 text-gray-400"
                   : "bg-orange-400 text-white hover:bg-orange-500"
-              }`}
+                }`}
             >
               Next
             </button>
           </div>
         )}
       </div>
+
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+          <div className="bg-white w-11/12 max-w-sm rounded-2xl shadow-lg p-6 text-center relative animate-fadeIn">
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <ShoppingCart className="w-12 h-12 text-orange-500 mx-auto mb-3" />
+            <h2 className="text-lg font-bold text-gray-800 mb-1">Added to Cart!</h2>
+            <p className="text-gray-500 text-sm mb-6">
+              Your product has been successfully added to the cart.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={() => setShowModal(false)}
+                className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl font-semibold hover:bg-gray-300 transition"
+              >
+                Continue Shopping
+              </button>
+              <button
+                onClick={() => router.push("/cart")}
+                className="flex-1 bg-gradient-to-r from-orange-400 to-red-400 text-white py-2 rounded-xl font-semibold hover:scale-105 transition"
+              >
+                Go to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

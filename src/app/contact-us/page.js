@@ -124,8 +124,16 @@ export default function ContactPage() {
                         </ul>
                         <h3 className="text-xl font-semibold text-gray-900 mb-2">Our Location</h3>
                         <div className="overflow-hidden rounded-md shadow">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28828.334350099924!2d72.4655816!3d34.1297884!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38dec75e6cd8a0ff%3A0x73a8f68999fc840c!2sSwabi%2C%20Khyber%20Pakhtunkhwa%2C%20Pakistan!5e0!3m2!1sen!2s!4v1695568123456!5m2!1sen!2s" width="100%" height="200" style={{ border: 0 }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Google Map" ></iframe>
-                        </div>
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d13211.981242352134!2d72.48945117919466!3d34.120869780282675!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzTCsDA3JzE1LjUiTiA3MsKwMzAnMDAuMSJF!5e0!3m2!1sen!2s!4v1761556561650!5m2!1sen!2s"
+                                width="600"
+                                height="450"
+                                style={{ border: 0 }}
+                                allowFullScreen
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                                title="Mobarak Foods Location"
+                            />                       </div>
                     </div>
                 </div>
             </div>

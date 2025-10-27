@@ -16,7 +16,7 @@ export default function OrderNowPage() {
     state: "",
     postalCode: "",
     instructions: "",
-    payment: "Cash on Delivery", // ✅ Default fixed
+    payment: "Cash on Delivery", 
   });
 
   useEffect(() => {
@@ -59,6 +59,26 @@ export default function OrderNowPage() {
           icon: "success"
         });
         localStorage.removeItem("checkoutData");
+        localStorage.removeItem("cart");
+
+        setForm({
+          fullName: "",
+          email: "",
+          phone: "",
+          dropOffAddress: "",
+          street: "",
+          city: "",
+          state: "",
+          postalCode: "",
+          instructions: "",
+          payment: "Cash on Delivery",
+        });
+
+        setCheckoutData({ items: [] });
+
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 2000);
       } else {
         // alert("❌ Order failed: " + data.error);
         Swal.fire({
@@ -143,6 +163,7 @@ export default function OrderNowPage() {
               placeholder="Enter Phone Number"
               value={form.phone}
               onChange={handleChange}
+
               className="w-full border px-3 py-2 rounded"
               required
             />
