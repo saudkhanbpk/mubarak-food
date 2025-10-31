@@ -16,7 +16,14 @@ export default function OrderNowPage() {
     state: "",
     postalCode: "",
     instructions: "",
-    payment: "Cash on Delivery", 
+    payment: "Cash on Delivery",
+    onlineMethod: "",        // 'card' or 'easypaisa'
+    cardType: "",            // 'Visa', 'MasterCard', 'Maestro', ...
+    cardNumber: "",
+    cardHolder: "",
+    cardExpiry: "",
+    cardCvv: "",
+    easypaisaNumber: "", 
   });
 
   useEffect(() => {
@@ -51,43 +58,128 @@ export default function OrderNowPage() {
       });
 
       const data = await res.json();
+      // if (data.success) {
+      //   // alert("✅ Order submitted successfully!");
+      //   Swal.fire({
+      //     title: "Good job!",
+      //     text: "Order submitted successfully!",
+      //     icon: "success"
+      //   });
+      //   localStorage.removeItem("checkoutData");
+      //   localStorage.removeItem("cart");
+
+      //   setForm({
+      //     fullName: "",
+      //     email: "",
+      //     phone: "",
+      //     dropOffAddress: "",
+      //     street: "",
+      //     city: "",
+      //     state: "",
+      //     postalCode: "",
+      //     instructions: "",
+      //     payment: "Cash on Delivery",
+      //      onlineMethod: "",
+      //     cardType: "",
+      //     cardNumber: "",
+      //     cardHolder: "",
+      //     cardExpiry: "",
+      //     cardCvv: "",
+      //     easypaisaNumber: "",
+      //   });
+
+      //   setCheckoutData({ items: [] });
+
+      //   setTimeout(() => {
+      //     window.location.href = "/";
+      //   }, 2000);
+      // } else {
+      //   // alert("❌ Order failed: " + data.error);
+      //   Swal.fire({
+      //     icon: "error",
+      //     title: "Oops...",
+      //     text: "❌ Order failed: " + data.error,
+
+      //   });
+      // }
+
+
       if (data.success) {
-        // alert("✅ Order submitted successfully!");
-        Swal.fire({
-          title: "Good job!",
-          text: "Order submitted successfully!",
-          icon: "success"
-        });
-        localStorage.removeItem("checkoutData");
-        localStorage.removeItem("cart");
+  const orderId = data.orderId; // returned from your /api/order backend after saving the order
 
-        setForm({
-          fullName: "",
-          email: "",
-          phone: "",
-          dropOffAddress: "",
-          street: "",
-          city: "",
-          state: "",
-          postalCode: "",
-          instructions: "",
-          payment: "Cash on Delivery",
-        });
+  // Check which payment method user selected
+  if (form.payment === "Online Payment") {
+    // 🔹 Initiate PayFast payment
+    const res = await fetch("/api/payfast-initiate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: total,                // total price
+        customer_email: form.email,   // customer's email
+        fullName: form.fullName,      // customer's name
+        orderId,                      // order id from database
+      }),
+    });
 
-        setCheckoutData({ items: [] });
+    const payfast = await res.json();
 
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 2000);
-      } else {
-        // alert("❌ Order failed: " + data.error);
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "❌ Order failed: " + data.error,
+    if (payfast.success) {
+      // 🔸 Redirect user to PayFast checkout page
+      window.location.href = payfast.checkoutUrl;
+      return; // stop further execution
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Payment Error",
+        text: payfast.error,
+      });
+      return;
+    }
+  }
 
-        });
-      }
+  // 🔹 Cash on Delivery (COD)
+  Swal.fire({
+    title: "Good job!",
+    text: "Order submitted successfully!",
+    icon: "success",
+  });
+
+  localStorage.removeItem("checkoutData");
+  localStorage.removeItem("cart");
+
+  setForm({
+    fullName: "",
+    email: "",
+    phone: "",
+    dropOffAddress: "",
+    street: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    instructions: "",
+    payment: "Cash on Delivery",
+    onlineMethod: "",
+    cardType: "",
+    cardNumber: "",
+    cardHolder: "",
+    cardExpiry: "",
+    cardCvv: "",
+    easypaisaNumber: "",
+  });
+
+  setCheckoutData({ items: [] });
+
+  setTimeout(() => {
+    window.location.href = "/";
+  }, 2000);
+} else {
+  Swal.fire({
+    icon: "error",
+    title: "Oops...",
+    text: "❌ Order failed: " + data.error,
+  });
+}
+
     } catch (err) {
       console.error("Order Error:", err);
       // alert("❌ Something went wrong");
@@ -123,6 +215,15 @@ export default function OrderNowPage() {
   );
 
   const total = subtotal + shippingFees + otherCharges - discount;
+
+   const supportedCards = [
+    "Visa",
+    "MasterCard",
+    "Maestro",
+    "Visa Electron",
+    "UnionPay",
+    "PayPak",
+  ];
 
   return (
     <div className="min-h-screen bg-white py-6">
@@ -230,17 +331,98 @@ export default function OrderNowPage() {
 
             {/* Payment Fixed */}
             <div className="mt-2">
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="payment"
-                  value="Cash on Delivery"
-                  checked={true}
-                  readOnly
-                  className="form-radio"
-                />
-                Cash on Delivery
-              </label>
+              <div className="flex flex-col gap-2">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="payment"
+                    value="Cash on Delivery"
+                    defaultChecked
+                    className="form-radio"
+                  />
+                  Cash on Delivery
+                </label>
+
+                  <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="payment"
+                    value="Online Payment"
+                    checked={form.payment === "Online Payment"}
+                    onChange={handleChange}
+                    className="form-radio"
+                  />
+                  Online Payment
+                </label>
+              </div>
+                  
+                  
+            
+            {/* show dynamic UI when Online Payment selected */}
+              {form.payment === "Online Payment" && (
+                <div className="mt-4 border p-4 rounded-lg shadow-sm bg-gray-50 space-y-3">
+                  <h3 className="font-semibold text-lg">Online Payment - Choose Method</h3>
+
+                  {/* Choose between Card or Easypaisa */}
+                  <div className="flex gap-3 items-center">
+                    <label className="flex items-center gap-2">
+                      <input type="radio" name="onlineMethod" value="card" checked={form.onlineMethod === "card"} onChange={handleChange} className="form-radio" />
+                      Card (Visa / MasterCard / Maestro / etc.)
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input type="radio" name="onlineMethod" value="easypaisa" checked={form.onlineMethod === "easypaisa"} onChange={handleChange} className="form-radio" />
+                      Easypaisa
+                    </label>
+                  </div>
+
+                  {/* Card UI */}
+                  {form.onlineMethod === "card" && (
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-slate-700">Card Type</label>
+                      <select name="cardType" value={form.cardType} onChange={handleChange} className="w-full border px-3 py-2 rounded">
+                        <option value="">-- Select Card Type --</option>
+                        {supportedCards.map((c) => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
+                      </select>
+
+                      <label className="block text-sm font-medium text-slate-700">Card Number</label>
+                      <input name="cardNumber" value={form.cardNumber} onChange={handleChange} placeholder="1234 5678 9012 3456" inputMode="numeric" className="w-full border px-3 py-2 rounded" />
+
+                      <div className="flex gap-2">
+                        <div className="flex-1">
+                          <label className="block text-sm font-medium text-slate-700">Expiry (MM/YY)</label>
+                          <input name="cardExpiry" value={form.cardExpiry} onChange={handleChange} placeholder="MM/YY" className="w-full border px-3 py-2 rounded" />
+                        </div>
+                        <div className="w-32">
+                          <label className="block text-sm font-medium text-slate-700">CVV</label>
+                          <input name="cardCvv" value={form.cardCvv} onChange={handleChange} placeholder="123" inputMode="numeric" className="w-full border px-3 py-2 rounded" />
+                        </div>
+                      </div>
+
+                      <label className="block text-sm font-medium text-slate-700">Card Holder Name</label>
+                      <input name="cardHolder" value={form.cardHolder} onChange={handleChange} placeholder="As on card" className="w-full border px-3 py-2 rounded" />
+                    </div>
+                  )}
+
+                  {/* Easypaisa UI */}
+                  {form.onlineMethod === "easypaisa" && (
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-slate-700">Easypaisa Mobile / Account</label>
+                      <input name="easypaisaNumber" value={form.easypaisaNumber} onChange={handleChange} placeholder="03XX-XXXXXXX" className="w-full border px-3 py-2 rounded" />
+                      <p className="text-xs text-gray-500">After you complete the Easypaisa transfer, record the transaction ID here (optional) or we will verify via gateway callback.</p>
+                    </div>
+                  )}
+
+                  {/* Amount preview */}
+                  <div className="pt-2">
+                    <label className="block text-sm font-medium text-slate-700">Amount</label>
+                    <input type="text" value={`Rs ${total.toFixed(2)}`} readOnly className="w-full border rounded px-3 py-2 bg-gray-100" />
+                  </div>
+
+                  <p className="text-xs text-gray-500">We will process the actual charge through the chosen gateway (PayFast / Easypaisa) after you place the order.</p>
+                </div>
+              )}
             </div>
 
             <button
